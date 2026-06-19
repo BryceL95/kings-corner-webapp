@@ -1,0 +1,8 @@
+application:
+  name: kingscorner
+  type: nodejs
+  root: public_html/projects/kingscorner
+  startup_file: server.js
+  node_version: "18"
+  environment: production
+  port: 3000
