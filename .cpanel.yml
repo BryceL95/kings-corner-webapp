@@ -7,6 +7,5 @@ deployment:
     - /bin/cp server.js $DEPLOYPATH
     - /bin/cp package.json $DEPLOYPATH
     - /bin/cp package-lock.json $DEPLOYPATH
-    - cd $DEPLOYPATH && npm install --omit=dev
     - /bin/mkdir -p ${DEPLOYPATH}tmp
     - touch ${DEPLOYPATH}tmp/restart.txt
