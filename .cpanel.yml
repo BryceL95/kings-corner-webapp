@@ -1,8 +1,10 @@
-application:
-  name: kingscorner
-  type: nodejs
-  root: public_html/projects/kingscorner
-  startup_file: server.js
-  node_version: "18"
-  environment: production
-  port: 3000
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=$HOME/public_html/projects/kingscorner/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R public $DEPLOYPATH
+    - /bin/cp server.js $DEPLOYPATH
+    - /bin/cp package.json $DEPLOYPATH
+    - /bin/cp package-lock.json $DEPLOYPATH
+    - cd $DEPLOYPATH && npm install --omit=dev
