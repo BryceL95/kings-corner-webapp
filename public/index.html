@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Kings Corner</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-felt-green">
+
+<!-- ── LOBBY SCREEN ── -->
+<div id="screen-lobby" class="screen active">
+  <div class="lobby-container">
+    <h1 class="game-title">♚ Kings Corner</h1>
+    <div class="card-panel">
+      <div class="form-group">
+        <label>Your Name</label>
+        <input id="username-input" type="text" maxlength="20" placeholder="Enter username" autocomplete="off">
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" onclick="createLobby()">Create Game</button>
+        <div class="divider">or</div>
+        <div class="join-row">
+          <input id="code-input" type="text" maxlength="4" placeholder="1234" class="code-input" autocomplete="off">
+          <button class="btn btn-secondary" onclick="joinLobby()">Join</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── WAITING ROOM ── -->
+<div id="screen-waiting" class="screen">
+  <div class="lobby-container">
+    <h1 class="game-title">♚ Kings Corner</h1>
+    <div class="card-panel">
+      <div class="lobby-code-display">
+        Lobby Code: <span id="lobby-code-display" class="code-badge"></span>
+        <button class="btn-icon" onclick="copyCode()" title="Copy code">⧉</button>
+      </div>
+      <div id="player-list" class="player-list"></div>
+      <p class="hint-text">Share the code with friends. 2–6 players.</p>
+      <button id="start-btn" class="btn btn-primary hidden" onclick="startGame()">Start Game</button>
+      <p id="waiting-msg" class="hint-text">Waiting for host to start…</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── GAME SCREEN ── -->
+<div id="screen-game" class="screen">
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="top-left">
+      <span id="lobby-code-badge" class="code-badge-sm"></span>
+      <span id="turn-indicator" class="turn-indicator"></span>
+    </div>
+    <div class="top-right">
+      <button class="btn-icon-sm" onclick="toggleSettings()" title="Settings">⚙</button>
+    </div>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="settings-panel" class="settings-panel hidden">
+    <div class="settings-inner">
+      <b>Card Style</b>
+      <div class="style-options">
+        <button onclick="setCardStyle('classic')" class="style-btn active" data-style="classic">Classic</button>
+        <button onclick="setCardStyle('minimal')" class="style-btn" data-style="minimal">Minimal</button>
+        <button onclick="setCardStyle('large')" class="style-btn" data-style="large">Large</button>
+      </div>
+      <b>Background</b>
+      <div class="style-options">
+        <button onclick="setBg('bg-felt-green')" class="style-btn active" data-bg="bg-felt-green">Green Felt</button>
+        <button onclick="setBg('bg-felt-blue')" class="style-btn" data-bg="bg-felt-blue">Blue Felt</button>
+        <button onclick="setBg('bg-wood')" class="style-btn" data-bg="bg-wood">Wood</button>
+        <button onclick="setBg('bg-dark')" class="style-btn" data-bg="bg-dark">Dark</button>
+      </div>
+      <button class="btn btn-sm" onclick="toggleSettings()">Close</button>
+    </div>
+  </div>
+
+  <!-- Opponent hands (top) -->
+  <div id="opponents-area" class="opponents-area"></div>
+
+  <!-- Board -->
+  <div class="board-wrapper">
+    <div class="board-grid">
+      <!-- Corner NW -->
+      <div class="pile-slot corner" id="pile-NW" data-pile="NW" onclick="handlePileClick('NW')">
+        <div class="pile-label">NW</div>
+        <div class="pile-content" id="pile-content-NW"></div>
+      </div>
+      <!-- Foundation N -->
+      <div class="pile-slot foundation" id="pile-N" data-pile="N" onclick="handlePileClick('N')">
+        <div class="pile-label">N</div>
+        <div class="pile-content" id="pile-content-N"></div>
+      </div>
+      <!-- Corner NE -->
+      <div class="pile-slot corner" id="pile-NE" data-pile="NE" onclick="handlePileClick('NE')">
+        <div class="pile-label">NE</div>
+        <div class="pile-content" id="pile-content-NE"></div>
+      </div>
+
+      <!-- Foundation W -->
+      <div class="pile-slot foundation" id="pile-W" data-pile="W" onclick="handlePileClick('W')">
+        <div class="pile-label">W</div>
+        <div class="pile-content" id="pile-content-W"></div>
+      </div>
+      <!-- Draw pile (center) -->
+      <div class="pile-slot draw-pile" id="draw-pile" onclick="handleDraw()">
+        <div class="pile-content" id="draw-pile-content">
+          <div class="card card-back"></div>
+        </div>
+        <div id="deck-count" class="deck-count">52</div>
+      </div>
+      <!-- Foundation E -->
+      <div class="pile-slot foundation" id="pile-E" data-pile="E" onclick="handlePileClick('E')">
+        <div class="pile-label">E</div>
+        <div class="pile-content" id="pile-content-E"></div>
+      </div>
+
+      <!-- Corner SW -->
+      <div class="pile-slot corner" id="pile-SW" data-pile="SW" onclick="handlePileClick('SW')">
+        <div class="pile-label">SW</div>
+        <div class="pile-content" id="pile-content-SW"></div>
+      </div>
+      <!-- Foundation S -->
+      <div class="pile-slot foundation" id="pile-S" data-pile="S" onclick="handlePileClick('S')">
+        <div class="pile-label">S</div>
+        <div class="pile-content" id="pile-content-S"></div>
+      </div>
+      <!-- Corner SE -->
+      <div class="pile-slot corner" id="pile-SE" data-pile="SE" onclick="handlePileClick('SE')">
+        <div class="pile-label">SE</div>
+        <div class="pile-content" id="pile-content-SE"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game log -->
+  <div id="game-log" class="game-log"></div>
+
+  <!-- My hand -->
+  <div class="my-hand-area">
+    <div class="hand-header">
+      <span id="my-hand-label">Your Hand</span>
+      <div class="action-btns">
+        <button id="end-turn-btn" class="btn btn-sm btn-end-turn hidden" onclick="endTurn()">End Turn</button>
+      </div>
+    </div>
+    <div id="my-hand" class="my-hand"></div>
+  </div>
+</div>
+
+<!-- ── WIN SCREEN ── -->
+<div id="screen-win" class="screen">
+  <div class="lobby-container">
+    <div class="card-panel win-panel">
+      <div class="win-trophy">🏆</div>
+      <h2 id="win-message" class="win-message"></h2>
+      <div id="leaderboard" class="leaderboard"></div>
+      <button id="play-again-btn" class="btn btn-primary hidden" onclick="playAgain()">Play Again</button>
+      <p id="win-waiting-msg" class="hint-text">Waiting for host to start next game…</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast hidden"></div>
+
+<script src="game.js"></script>
+</body>
+</html>
