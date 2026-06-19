@@ -13,7 +13,8 @@ let currentBg = 'bg-felt-green';
 
 function connect(onOpen) {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  ws = new WebSocket(`${proto}//${location.host}`);
+  const basePath = location.pathname.replace(/\/[^\/]*$/, '');
+  ws = new WebSocket(`${proto}//${location.host}${basePath}`);
   ws.onopen = onOpen;
   ws.onmessage = e => handleMessage(JSON.parse(e.data));
   ws.onclose = () => showToast('Disconnected — reload to reconnect', 'error');
